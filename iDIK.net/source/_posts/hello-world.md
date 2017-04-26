@@ -1,38 +1,17 @@
 ---
-title: Hello World
+title: 'Hello, World! '
+date: 2017-04-26 11:37:26
+tags: 只随笔
 ---
-Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
-## Quick Start
+> 写点文字在开篇
 
-### Create a new post
+有过写博客的经历，然而却始终未能坚持下来，究其原委，想想也简单，无非就是太过于纠结在人前，在意有多少人来看过，在意这篇文章能引起多少共鸣抑或回响，在意朋友的眼光还有自身高大伟岸的形象，在意措辞点墨，甚至在意段落的结尾是应该用波浪线还是感叹号，在意的太多，背负的太多，何以支撑至远方？
 
-``` bash
-$ hexo new "My New Post"
-```
+> 记录生活，记录真实，记录随意
 
-More info: [Writing](https://hexo.io/docs/writing.html)
+嗯，博客之于我，就是一种记录，记录我的成长，记录我的感悟，记录我的一切想记录的，用最简单的话语，最直白的语句，不刻意营造浪漫，不为求众人鲜花，只为给以后的自己再回首看看，还有。
 
-### Run server
+> 我的世界，你好！
 
-``` bash
-$ hexo server
-```
-
-More info: [Server](https://hexo.io/docs/server.html)
-
-### Generate static files
-
-``` bash
-$ hexo generate
-```
-
-More info: [Generating](https://hexo.io/docs/generating.html)
-
-### Deploy to remote sites
-
-``` bash
-$ hexo deploy
-```
-
-More info: [Deployment](https://hexo.io/docs/deployment.html)
+今天，再出发，这一次，我的目标读者只有两个人。
