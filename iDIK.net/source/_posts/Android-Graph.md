@@ -4,9 +4,13 @@ date: 2017-04-26 20:15:04
 tags: 在Android开发的路上越走越偏
 ---
 
-# Android
+> 写在前面的话
+
+Android开发已经相当一段时间了，最初接触Android是因为系统开发，自由，我能实现我的几乎所有想法。 // TODO
 
 <!-- more -->
+
+# Android
 
 ## 架构
 
