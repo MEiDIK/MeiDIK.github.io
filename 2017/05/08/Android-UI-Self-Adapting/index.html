@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="在Android开发的路上越走越偏," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="不同于其他系统，Android最厉害的一点就是系统的适配能力超强，小到手表甚至更小，大到投影甚至更大，再加之Google为物联网未来准备的Android Things，未来Android可能内嵌于身边的方方面面，对于开发者来说，是兴奋点，也是巨大的挑战，毕竟适配工作要考虑充分。而这其中，屏幕适配问题是不得不注意也是每个Android应用开发者必须面对的一道坎。 本文研究屏幕适配的方法以及原理。">
+<meta name="keywords" content="在Android开发的路上越走越偏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android UI自适应方案研究">
+<meta property="og:url" content="http://me.idik.net/2017/05/08/Android-UI-Self-Adapting/index.html">
+<meta property="og:site_name" content="我和我的世界">
+<meta property="og:description" content="不同于其他系统，Android最厉害的一点就是系统的适配能力超强，小到手表甚至更小，大到投影甚至更大，再加之Google为物联网未来准备的Android Things，未来Android可能内嵌于身边的方方面面，对于开发者来说，是兴奋点，也是巨大的挑战，毕竟适配工作要考虑充分。而这其中，屏幕适配问题是不得不注意也是每个Android应用开发者必须面对的一道坎。 本文研究屏幕适配的方法以及原理。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://me.idik.net/images/android-screen-sizes-2013.jpg">
+<meta property="og:updated_time" content="2017-11-09T01:17:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android UI自适应方案研究">
+<meta name="twitter:description" content="不同于其他系统，Android最厉害的一点就是系统的适配能力超强，小到手表甚至更小，大到投影甚至更大，再加之Google为物联网未来准备的Android Things，未来Android可能内嵌于身边的方方面面，对于开发者来说，是兴奋点，也是巨大的挑战，毕竟适配工作要考虑充分。而这其中，屏幕适配问题是不得不注意也是每个Android应用开发者必须面对的一道坎。 本文研究屏幕适配的方法以及原理。">
+<meta name="twitter:image" content="http://me.idik.net/images/android-screen-sizes-2013.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://me.idik.net/2017/05/08/Android-UI-Self-Adapting/"/>
+
+
+
+
+
+  <title>Android UI自适应方案研究 | 我和我的世界</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">我和我的世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">@iDIK.net</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://me.idik.net/2017/05/08/Android-UI-Self-Adapting/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="林帅斌">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我和我的世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android UI自适应方案研究</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-08T19:59:21+08:00">
+                2017-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>不同于其他系统，Android最厉害的一点就是系统的适配能力超强，小到手表甚至更小，大到投影甚至更大，再加之Google为物联网未来准备的Android Things，未来Android可能内嵌于身边的方方面面，对于开发者来说，是兴奋点，也是巨大的挑战，毕竟适配工作要考虑充分。而这其中，屏幕适配问题是不得不注意也是每个Android应用开发者必须面对的一道坎。</p>
+<p>本文研究屏幕适配的方法以及原理。</p>
+<a id="more"></a>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><ol>
+<li>文章为原创, 作者为林帅斌，转载请注明出处：<a href="http://me.idik.net">我和我的世界@iDIK.net</a></li>
+<li>个人水平有限，难免理解出错，望指出共同研究。</li>
+</ol>
+<h1 id="在开始之前，先思考几个问题"><a href="#在开始之前，先思考几个问题" class="headerlink" title="在开始之前，先思考几个问题"></a>在开始之前，先思考几个问题</h1><ol>
+<li>为什么需要适配屏幕？</li>
+<li>为什么Android不能自动适配不同屏幕？</li>
+<li>如果让你来设计，该如何设计？</li>
+</ol>
+<p><del>这些问题和下面讨论的可能无关，这里纯粹是想你先思考一下，不要打我</del></p>
+<h1 id="为什么需要适配屏幕？"><a href="#为什么需要适配屏幕？" class="headerlink" title="为什么需要适配屏幕？"></a>为什么需要适配屏幕？</h1><p>这个话题可以扯出一篇论文的长度，而这里就不多说了，总的来说，就是Android设备屏幕差别大，使一个应用具备可用性 <strong>不得不</strong> 进行屏幕适配。</p>
+<p>主要原因有二：</p>
+<ol>
+<li>屏幕大小相差甚远，固定布局很难适应不同屏幕</li>
+<li>尽管是屏幕相同，分辨率依然有差别，内容显示忽大忽小</li>
+</ol>
+<h1 id="如何适配"><a href="#如何适配" class="headerlink" title="如何适配"></a>如何适配</h1><p>方案有三：</p>
+<ol>
+<li>为每一种条件组合准备一种资源</li>
+<li>自动适配</li>
+<li>前两者结合的优势</li>
+</ol>
+<h2 id="方案一：为每种条件组合准备一种资源布局"><a href="#方案一：为每种条件组合准备一种资源布局" class="headerlink" title="方案一：为每种条件组合准备一种资源布局"></a>方案一：为每种条件组合准备一种资源布局</h2><p>这应该是最先想到，也是效果最好的一个方案。</p>
+<p>Android的设计者也为这个方案提供了很多必要的支持，例如提供了一套自动匹配条件的布局选择器，你可以根据不同的屏幕大小、不同的分辨率、不同的屏幕方向、甚至不同的语言种类等等等等各准备一套布局，Android系统会为你精准加载相应的布局用来适配屏幕。</p>
+<p>例如，你可以为分辨率是120*180的1.8寸屏幕准备一个布局，里面的一张图片大小设为100*100像素，同时为另外一个分辨率是240*360的1.8寸屏幕准备一个布局，里面的同一张图片大小设为200*200像素。这样，在两台分辨率不一样但大小一致的设备上，我们就几乎获得了相同的体验。</p>
+<p><img src="" alt="通过准备不同的资源布局获得一致的体验"></p>
+<p>这样无论是什么样的屏幕我们都能完美的匹配它，但，<strong>代价惨烈</strong> （请务必注意加粗），非官方数据显示Android碎片化那个严重呀，上一张网络流传已久的图片先：</p>
+<p><img src="/images/android-screen-sizes-2013.jpg" alt="Android屏幕碎片化@2013"></p>
+<p>这是2013年的数据，现在应该有甚之，要徒手写这么多了套资源布局，给你刀🔪，你还是给我个痛快吧。。。</p>
+<h2 id="方案二：自动适配方案"><a href="#方案二：自动适配方案" class="headerlink" title="方案二：自动适配方案"></a>方案二：自动适配方案</h2><p>针对问题本质，如果想自动适配，考虑以下两点:</p>
+<ol>
+<li>保证UI内容元素显示正常，保证可用性，即内容自适应</li>
+<li>布局空间根据屏幕大小自适应，即屏幕自适应</li>
+</ol>
+<h3 id="内容自适应"><a href="#内容自适应" class="headerlink" title="内容自适应"></a>内容自适应</h3><p>内容自适应指的是在不同设备上，UI内容元素显示的效果应该是一致的。即在分辨率是120*180和1080*1920的设备上看到一样大小的文字、图片。这就需要我们想办法忽略“像素”影响，也就是说：</p>
+<blockquote>
+<p>我们设计UI时其实更关注物理尺寸，而非“像素”</p>
+</blockquote>
+<p>如果关注的是像素会怎么样？</p>
+<p>举个栗子说明一下问题的严重性，设想一下，在屏幕一样大，像素分别为360*480和1080*1920的设备A和B上， 如果一张图片是360*480像素的，在设备A中，已经是一整屏幕了，而设备B中，却仅仅是一个角落小方块，这样带来的用户体验肯定是不可保证而且不怎么愉悦的。</p>
+<p><img src="" alt="同一张图片在两台分辨率不一样但屏幕大小相同的设备上"></p>
+<p>所以，设计UI是关注的是，我这个图片是2cm*2cm大小的，只有这个大小，图片内的内容才能正确显示出来，而不管什么像素条件下。</p>
+<p>这是基于这样的思想，Android设计者设计了一套尺寸规范：DPI &amp; DP。企图使用这套尺寸规范达到忽略底层像素的效果，实际上，的确很不错。</p>
+<h4 id="DPI-amp-DP"><a href="#DPI-amp-DP" class="headerlink" title="DPI &amp; DP"></a>DPI &amp; DP</h4><p>关注实际尺寸，忽略物理像素，而每个设备屏幕的大小和像素又没有严谨的对应关系，就算屏幕大小一直，但分辨率也有可能不一致，另一方面，我们一旦决定了内容元素的无力尺寸，其实需要的就是系统自动算出相应的像素，所以，Android设计了一个屏幕密度用来计算解决这个问题。</p>
+<ul>
+<li>何为DPI, 屏幕密度？</li>
+</ul>
+<blockquote>
+<p>屏幕密度就是 <strong>单位长度内的像素数</strong>。</p>
+</blockquote>
+<p>在Android中，屏幕密度指的是 <strong>一英寸长度内的像素数</strong>，每一台设备的屏幕是自带屏幕密度属性，根据这个屏幕密度属性，系统就能轻易算出目标尺寸对应在该屏幕上的像素数。</p>
+<p>根据这个方案，我们设计UI的时候，就可以用物理尺寸描述：长1英寸，宽2.2英寸等等等等。然后，系统就能帮我们算出在不同的屏幕上，具体应该用多少像素来绘制这个UI。</p>
+<p>这有个问题，使用什么长度尺寸单位比较好？</p>
+<p>我们习惯的毫米、厘米、分米和米怎么看？不怎么好，因为屏幕大小习惯以英寸来描述，而英寸和通用长度单位的转换不很轻松：1in = 2.54cm，所以计算起来可能很多不方便。那直接使用英寸来描述如何？可以是可以，但因为一般手机屏幕总共大小才5英寸左右，所以经常说这个图标长0.0027英寸，宽0.0029英寸，自自然一批又一批设计师和开发要改行了。</p>
+<p>于是呼，Android设计者又发明了一个新的长度单位：DP。</p>
+<p>并 <del>强行</del> 定义转换公式为：$1dp = \frac{1}{160}*1in$。(其实定义为160分之1是根据主流屏幕大小与主流屏幕像素研究出来的，以达到实际使用中基本无需使用小数的疗效)</p>
+<p>就这样，UI设计师可以愉快的使用物理长度单位DP，而在屏幕上使用多少像素就交给Android系统自行去比划。</p>
+<ul>
+<li>系统是如何比划的？</li>
+</ul>
+<p>这也是不少人很好奇的一点，即DP如何转换成PX？屏幕密度已知，而DP即长度，二者相乘就可以了？答案就是这样，其中值得注意的，就是单位问题，屏幕密度的单位是 $\frac{px}{in}$, 所以我们要先把长度也转换成in即可。</p>
+<p>$$px = dpi * (\frac{1}{160} * dp)$$</p>
+<p>这就是很多文章经常提到的一个转换公式。</p>
+<p>至此，尺寸自适应的问题似乎已经解决了。</p>
+<blockquote>
+<p>每个屏幕的DPI几乎都可能不同，为了方便处理，Android把主流关注的DPI进行了分级，然后把DPI进行归类，这样，处理的难度就简单了很多，尤其是为DPI准备资源时。缺点也是有的，就是DPI不是一个精准值，算出来的像素可能和真实像素有所差别，导致出来的效果和UI设计效果有一定差异，不过差异在可接受范围，也就无关紧要了。具体请看下面👇章节继续讨论。</p>
+</blockquote>
+<h4 id="图片资源问题"><a href="#图片资源问题" class="headerlink" title="图片资源问题"></a>图片资源问题</h4><p>那么我们该如何准备我们的图片资源？</p>
+<p>根据DPI与DP的讨论我们可以设计一个简单的方案：针对一个DPI提供资源，并告知系统这是为某某DPI准备的资源，系统就会把图片的像素大小转换成dp，再根据目标屏幕的DPI进行转换，得出最终加载完的图片像素大小。</p>
+<p>还是举个栗子，</p>
+<p>例如我准备了一张320*480像素的图片，告知系统这是为320dpi准备的照片，这时候要显示在480dpi的手机屏幕上，看最终加载完图片会变成多少像素。</p>
+<p>第一步, 获取图片DP值：</p>
+<p>$$<br>宽度(dp) = px ÷ dpi * 160 = 320 ÷ 320 * 160 = 160dp<br>$$</p>
+<p>$$<br>高度(dp) = px ÷ dpi * 160 = 480 ÷ 320 * 160 = 240dp<br>$$</p>
+<p>第二步, 计算在目标及设备屏幕上为多少像素:</p>
+<p>$$<br>宽度(px) = dpi * (\frac{1}{160} * dp) = 480 * (\frac{1}{160} * 160) = 480px<br>$$</p>
+<p>$$<br>高度(px) = dpi * (\frac{1}{160} * dp) = 480 * (\frac{1}{160} * 240) = 720px<br>$$</p>
+<p>即在该屏幕上，该图片将会自动被拉伸至480*720像素以达到看上去大小一致，如下图所示：</p>
+<p><img src="" alt="图片资源拉伸图示例"></p>
+<p>嗯，这个方案一份资源就可以行走天下，很好很强大，然，还是有一些问题</p>
+<ol>
+<li>低DPI的资源应用在高DPI的目标屏幕上，图片无可避免会被拉伸，而拉伸图片将导致图片模糊等问题带来不好的体验</li>
+<li><del>高DPI的资源应用在低DPI的目标屏幕上，TODO</del></li>
+</ol>
+<p>这样看来一份资源还是有点勉强，那为每一种DPI都准备一份资源如何？显然也是不可能的，所以Android设计者把主流屏幕归纳为ldpi、mdpi、hdpi、xhdpi、xxhdp等几个分级，相对应的具体数值如下表，（随着高分辨率屏的发展，现在已经出现了xxxhdpi，不过此处暂不关注）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">DPI级别</th>
+<th style="text-align:left">代表分辨率(px)</th>
+<th style="text-align:left">DPI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">ldpi</td>
+<td style="text-align:left">240*320</td>
+<td style="text-align:left">120</td>
+</tr>
+<tr>
+<td style="text-align:left">mdpi</td>
+<td style="text-align:left">320*480</td>
+<td style="text-align:left">160</td>
+</tr>
+<tr>
+<td style="text-align:left">hdpi</td>
+<td style="text-align:left">480*720</td>
+<td style="text-align:left">240</td>
+</tr>
+<tr>
+<td style="text-align:left">xhdpi</td>
+<td style="text-align:left">720*1280</td>
+<td style="text-align:left">320</td>
+</tr>
+<tr>
+<td style="text-align:left">xxhdpi</td>
+<td style="text-align:left">1080*1920</td>
+<td style="text-align:left">480</td>
+</tr>
+</tbody>
+</table>
+<p>根据这份表格提供相应DPI的资源即可，其余的交给系统来命中以及缩放。那如果相应的DPI找不到该资源呢？Android有一套自动匹配规则，会自动寻找最优匹配资源，不过对开发者完全透明，而且随着SDK版本规则可能会更新，所以本文章也暂时不研究。</p>
+<h3 id="屏幕自适应"><a href="#屏幕自适应" class="headerlink" title="屏幕自适应"></a>屏幕自适应</h3><p>屏幕自适应很容易理解，也很容易解决：</p>
+<blockquote>
+<p>大屏幕显示10条数据，小屏幕只显示3条数据。</p>
+</blockquote>
+<p>基于这样的思想，让布局来自动处理不同屏幕的差异即可，而Android系统设计者也的确是这样做的，系统默认提供的布局控件几乎都是支持自适应的，不支持的如AbsoluteLayout等也被标识为不推荐使用。</p>
+<p>此外，在布局时，Android也提供了“MATCH_PARENT”、“WRAP_CONTENT”等尺寸属性自适应屏幕、内容大小。</p>
+<p>做到这一点，就解决了第一个问题，应用就具备了基本的自适应能力。</p>
+<h3 id="小结一下"><a href="#小结一下" class="headerlink" title="小结一下"></a>小结一下</h3><p>做好了内容自适应、屏幕自适应，我们的应用在不考虑更好用户体验这个前提下，可以满足大多数设备的自适应需求，而且是自动化的，收益高，我们平时开发应用采取得最多的就是这个方案。</p>
+<p>但缺点也是有的，主要体现在：</p>
+<ol>
+<li>不同屏幕使用同一套UI，虽然内容显示没问题，但交互体验可能不够好，栗子请参考方案三。</li>
+<li>在局部屏幕上，即使经过处理可能还是显示有问题，问题主要集中在极小屏幕上。</li>
+</ol>
+<h2 id="方案三：结合前两者优势"><a href="#方案三：结合前两者优势" class="headerlink" title="方案三：结合前两者优势"></a>方案三：结合前两者优势</h2><p>思考一个栗子，新闻客户端，在手机上使用时，我们的屏幕一般较小，所以经常会采取两个页面设计，一个页面为新闻列表，点击任意一条新闻，即可进入新闻详情页面进一步查看：</p>
+<p><img src="" alt="新闻客户端@手机"></p>
+<p>这个体验不错，但当我们这个应用使用在平板上，根据方案二，我们的内容和布局都会自适应，其中，内容大小不变，布局会被拉伸以容纳更多内容，此时，平板就犹如一台大屏手机，但其实在平板上看新闻，因为一个页面足够大，如果把一个页面分为左右两边，左边显示新闻列表，右边显示新闻详情，点击左边的新闻列表，相应的新闻详情就会显示在右边，不用进行页面跳转，这样的体验很可能更好，而且布局更丰富更美观。</p>
+<p>这个时候，我们就可以采取方案一，为平板专门准备一套如上所说的布局：</p>
+<p><img src="" alt="新闻客户端@平板"></p>
+<p>就是这样，我们综合了方案一和方案二的优点，使我们应用既能自动适配大多数屏幕，又能为个别屏幕提供更好的用户体验，这是我们在实际开发中应该积极考虑的。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>关于屏幕适配，Android系统设计者给我设计了完整的一套方案，也为我们提供了必要的技术支持，但还是要根据应用本身的需求来进行自定义具体的适配方案，知晓方案二中的原理能让我们更好的了解自适配的事情，而方案一可以做出更好的用户体验，希望大家结合两方案，也就是方案三，做出自适配性更强、用户体验更好的应用。</p>
+<hr>
+<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><p>一些文中没有提到，但好像相关的问题:</p>
+<ul>
+<li><p>.9图是怎么回事？<br>  //todo</p>
+</li>
+<li><p>为什么不效仿Web前端布局方案？<br>  //todo</p>
+</li>
+<li><p>出了上面提到的这两个方案，有没有其他方案？<br>  //todo</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/在Android开发的路上越走越偏/" rel="tag"># 在Android开发的路上越走越偏</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/04/Architecture-of-Android-apps/" rel="next" title="Android应用架构浅析（正在输入中...)">
+                <i class="fa fa-chevron-left"></i> Android应用架构浅析（正在输入中...)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">林帅斌</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在开始之前，先思考几个问题"><span class="nav-number">2.</span> <span class="nav-text">在开始之前，先思考几个问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么需要适配屏幕？"><span class="nav-number">3.</span> <span class="nav-text">为什么需要适配屏幕？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何适配"><span class="nav-number">4.</span> <span class="nav-text">如何适配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方案一：为每种条件组合准备一种资源布局"><span class="nav-number">4.1.</span> <span class="nav-text">方案一：为每种条件组合准备一种资源布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案二：自动适配方案"><span class="nav-number">4.2.</span> <span class="nav-text">方案二：自动适配方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内容自适应"><span class="nav-number">4.2.1.</span> <span class="nav-text">内容自适应</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DPI-amp-DP"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">DPI & DP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图片资源问题"><span class="nav-number">4.2.1.2.</span> <span class="nav-text">图片资源问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#屏幕自适应"><span class="nav-number">4.2.2.</span> <span class="nav-text">屏幕自适应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结一下"><span class="nav-number">4.2.3.</span> <span class="nav-text">小结一下</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案三：结合前两者优势"><span class="nav-number">4.3.</span> <span class="nav-text">方案三：结合前两者优势</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附"><span class="nav-number">6.</span> <span class="nav-text">附</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">林帅斌</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

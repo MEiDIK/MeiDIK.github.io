@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="在Android开发的路上越走越偏," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="写在前面的话  Android开发已经相当一段时间了，最初接触Android是因为系统开发，自由，我能实现我的几乎所有想法。 // TODO">
+<meta name="keywords" content="在Android开发的路上越走越偏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Graph">
+<meta property="og:url" content="http://me.idik.net/2017/04/26/Android-Graph/index.html">
+<meta property="og:site_name" content="我和我的世界">
+<meta property="og:description" content="写在前面的话  Android开发已经相当一段时间了，最初接触Android是因为系统开发，自由，我能实现我的几乎所有想法。 // TODO">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-09T01:17:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Graph">
+<meta name="twitter:description" content="写在前面的话  Android开发已经相当一段时间了，最初接触Android是因为系统开发，自由，我能实现我的几乎所有想法。 // TODO">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://me.idik.net/2017/04/26/Android-Graph/"/>
+
+
+
+
+
+  <title>Android Graph | 我和我的世界</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">我和我的世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">@iDIK.net</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://me.idik.net/2017/04/26/Android-Graph/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="林帅斌">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我和我的世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android Graph</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-26T20:15:04+08:00">
+                2017-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>写在前面的话</p>
+</blockquote>
+<p>Android开发已经相当一段时间了，最初接触Android是因为系统开发，自由，我能实现我的几乎所有想法。 // TODO</p>
+<a id="more"></a>
+<h1 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h1><h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><h3 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h3><h3 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h3><h2 id="自定义控件"><a href="#自定义控件" class="headerlink" title="自定义控件"></a>自定义控件</h2><h3 id="Paint"><a href="#Paint" class="headerlink" title="Paint"></a>Paint</h3><h3 id="Canvas"><a href="#Canvas" class="headerlink" title="Canvas"></a>Canvas</h3><h2 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h2><h2 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h2><h3 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h3><h3 id="流畅度优化"><a href="#流畅度优化" class="headerlink" title="流畅度优化"></a>流畅度优化</h3><h3 id="电量优化"><a href="#电量优化" class="headerlink" title="电量优化"></a>电量优化</h3><h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><h3 id="系统启动流程"><a href="#系统启动流程" class="headerlink" title="系统启动流程"></a>系统启动流程</h3><h3 id="应用启动流程"><a href="#应用启动流程" class="headerlink" title="应用启动流程"></a>应用启动流程</h3><h3 id="Binder机制"><a href="#Binder机制" class="headerlink" title="Binder机制"></a>Binder机制</h3><h3 id="几个看名字就觉得很重要的家伙"><a href="#几个看名字就觉得很重要的家伙" class="headerlink" title="几个看名字就觉得很重要的家伙"></a>几个看名字就觉得很重要的家伙</h3><h4 id="Zygote"><a href="#Zygote" class="headerlink" title="Zygote"></a>Zygote</h4><h4 id="SystemServer"><a href="#SystemServer" class="headerlink" title="SystemServer"></a>SystemServer</h4><h4 id="AMS"><a href="#AMS" class="headerlink" title="AMS"></a>AMS</h4><h4 id="WMS"><a href="#WMS" class="headerlink" title="WMS"></a>WMS</h4><h2 id="话题研究所"><a href="#话题研究所" class="headerlink" title="话题研究所"></a>话题研究所</h2><h3 id="Bitmap"><a href="#Bitmap" class="headerlink" title="Bitmap"></a>Bitmap</h3><h3 id="Handler机制"><a href="#Handler机制" class="headerlink" title="Handler机制"></a>Handler机制</h3><h3 id="Task任务栈"><a href="#Task任务栈" class="headerlink" title="Task任务栈"></a>Task任务栈</h3><h3 id="Activity启动模式"><a href="#Activity启动模式" class="headerlink" title="Activity启动模式"></a>Activity启动模式</h3><h3 id="资源适配"><a href="#资源适配" class="headerlink" title="资源适配"></a>资源适配</h3><h3 id="保活技术"><a href="#保活技术" class="headerlink" title="保活技术"></a>保活技术</h3><h3 id="热更新技术"><a href="#热更新技术" class="headerlink" title="热更新技术"></a>热更新技术</h3><h2 id="一些厉害的禁术"><a href="#一些厉害的禁术" class="headerlink" title="一些厉害的禁术"></a>一些厉害的禁术</h2><h3 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h3><h3 id="RX"><a href="#RX" class="headerlink" title="RX"></a>RX</h3><h3 id="Kotlin"><a href="#Kotlin" class="headerlink" title="Kotlin"></a>Kotlin</h3><hr>
+<h1 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h1><h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><h4 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h4><h4 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h4><h4 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h4><h2 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h2><h3 id="内存管理与垃圾回收机制"><a href="#内存管理与垃圾回收机制" class="headerlink" title="内存管理与垃圾回收机制"></a>内存管理与垃圾回收机制</h3><h3 id="类加载过程分析"><a href="#类加载过程分析" class="headerlink" title="类加载过程分析"></a>类加载过程分析</h3><hr>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><h2 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h2><h2 id="TCP／IP"><a href="#TCP／IP" class="headerlink" title="TCP／IP"></a>TCP／IP</h2><h2 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h2><hr>
+<h1 id="数据结构与算法"><a href="#数据结构与算法" class="headerlink" title="数据结构与算法"></a>数据结构与算法</h1><h2 id="树"><a href="#树" class="headerlink" title="树"></a>树</h2><h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><hr>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/在Android开发的路上越走越偏/" rel="tag"># 在Android开发的路上越走越偏</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/26/hello-world/" rel="next" title="Hello, World! ">
+                <i class="fa fa-chevron-left"></i> Hello, World! 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/04/Architecture-of-Android-apps/" rel="prev" title="Android应用架构浅析（正在输入中...)">
+                Android应用架构浅析（正在输入中...) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">林帅斌</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android"><span class="nav-number">1.</span> <span class="nav-text">Android</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#架构"><span class="nav-number">1.1.</span> <span class="nav-text">架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MVC"><span class="nav-number">1.1.1.</span> <span class="nav-text">MVC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP"><span class="nav-number">1.1.2.</span> <span class="nav-text">MVP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVVM"><span class="nav-number">1.1.3.</span> <span class="nav-text">MVVM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义控件"><span class="nav-number">1.2.</span> <span class="nav-text">自定义控件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Paint"><span class="nav-number">1.2.1.</span> <span class="nav-text">Paint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Canvas"><span class="nav-number">1.2.2.</span> <span class="nav-text">Canvas</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动画"><span class="nav-number">1.3.</span> <span class="nav-text">动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能优化"><span class="nav-number">1.4.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存优化"><span class="nav-number">1.4.1.</span> <span class="nav-text">内存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流畅度优化"><span class="nav-number">1.4.2.</span> <span class="nav-text">流畅度优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#电量优化"><span class="nav-number">1.4.3.</span> <span class="nav-text">电量优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码分析"><span class="nav-number">1.5.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#系统启动流程"><span class="nav-number">1.5.1.</span> <span class="nav-text">系统启动流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用启动流程"><span class="nav-number">1.5.2.</span> <span class="nav-text">应用启动流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder机制"><span class="nav-number">1.5.3.</span> <span class="nav-text">Binder机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几个看名字就觉得很重要的家伙"><span class="nav-number">1.5.4.</span> <span class="nav-text">几个看名字就觉得很重要的家伙</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Zygote"><span class="nav-number">1.5.4.1.</span> <span class="nav-text">Zygote</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SystemServer"><span class="nav-number">1.5.4.2.</span> <span class="nav-text">SystemServer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AMS"><span class="nav-number">1.5.4.3.</span> <span class="nav-text">AMS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WMS"><span class="nav-number">1.5.4.4.</span> <span class="nav-text">WMS</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#话题研究所"><span class="nav-number">1.6.</span> <span class="nav-text">话题研究所</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bitmap"><span class="nav-number">1.6.1.</span> <span class="nav-text">Bitmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Handler机制"><span class="nav-number">1.6.2.</span> <span class="nav-text">Handler机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task任务栈"><span class="nav-number">1.6.3.</span> <span class="nav-text">Task任务栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Activity启动模式"><span class="nav-number">1.6.4.</span> <span class="nav-text">Activity启动模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#资源适配"><span class="nav-number">1.6.5.</span> <span class="nav-text">资源适配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保活技术"><span class="nav-number">1.6.6.</span> <span class="nav-text">保活技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#热更新技术"><span class="nav-number">1.6.7.</span> <span class="nav-text">热更新技术</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些厉害的禁术"><span class="nav-number">1.7.</span> <span class="nav-text">一些厉害的禁术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖注入"><span class="nav-number">1.7.1.</span> <span class="nav-text">依赖注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RX"><span class="nav-number">1.7.2.</span> <span class="nav-text">RX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kotlin"><span class="nav-number">1.7.3.</span> <span class="nav-text">Kotlin</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java"><span class="nav-number">2.</span> <span class="nav-text">Java</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型"><span class="nav-number">2.1.</span> <span class="nav-text">泛型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发"><span class="nav-number">2.2.</span> <span class="nav-text">并发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程"><span class="nav-number">2.2.1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程"><span class="nav-number">2.2.2.</span> <span class="nav-text">线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线程的状态"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">线程的状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#锁"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程池"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">线程池</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟机"><span class="nav-number">2.3.</span> <span class="nav-text">虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存管理与垃圾回收机制"><span class="nav-number">2.3.1.</span> <span class="nav-text">内存管理与垃圾回收机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载过程分析"><span class="nav-number">2.3.2.</span> <span class="nav-text">类加载过程分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络"><span class="nav-number">3.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络模型"><span class="nav-number">3.1.</span> <span class="nav-text">网络模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP／IP"><span class="nav-number">3.2.</span> <span class="nav-text">TCP／IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP协议"><span class="nav-number">3.3.</span> <span class="nav-text">HTTP协议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据结构与算法"><span class="nav-number">4.</span> <span class="nav-text">数据结构与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#树"><span class="nav-number">4.1.</span> <span class="nav-text">树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排序"><span class="nav-number">4.2.</span> <span class="nav-text">排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number">5.</span> <span class="nav-text">其他</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">林帅斌</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="在Android开发的路上越走越偏," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="看山是山看山不是山看山还是山  只谈风月，不谈代码。">
+<meta name="keywords" content="在Android开发的路上越走越偏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android应用架构浅析（正在输入中...)">
+<meta property="og:url" content="http://me.idik.net/2017/05/04/Architecture-of-Android-apps/index.html">
+<meta property="og:site_name" content="我和我的世界">
+<meta property="og:description" content="看山是山看山不是山看山还是山  只谈风月，不谈代码。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-09T01:17:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android应用架构浅析（正在输入中...)">
+<meta name="twitter:description" content="看山是山看山不是山看山还是山  只谈风月，不谈代码。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://me.idik.net/2017/05/04/Architecture-of-Android-apps/"/>
+
+
+
+
+
+  <title>Android应用架构浅析（正在输入中...) | 我和我的世界</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">我和我的世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">@iDIK.net</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://me.idik.net/2017/05/04/Architecture-of-Android-apps/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="林帅斌">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我和我的世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android应用架构浅析（正在输入中...)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T14:48:59+08:00">
+                2017-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>看山是山<br>看山不是山<br>看山还是山</p>
+</blockquote>
+<p>只谈风月，不谈代码。</p>
+<a id="more"></a>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><ol>
+<li>文章为原创, 作者为林帅斌，转载请注明出处：<a href="http://me.idik.net">我和我的世界@iDIK.net</a></li>
+<li>文章主旨为研究Android应用的架构方案思想，不细至代码。</li>
+<li>个人水平有限，难免理解出错，望指出共同研究。</li>
+</ol>
+<h1 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h1><hr>
+<h2 id="MVC是啥？"><a href="#MVC是啥？" class="headerlink" title="MVC是啥？"></a>MVC是啥？</h2><p>MVC是一种被Web服务器框架广泛使用而且很是成熟的架构，这种架构把一次交互逻辑划分为 <strong>视图-控制器-业务处理器</strong> 三大模块，按照这三大模块集合则把整个系统划分为了MVC三大层次, 具体功能如下</p>
+<ul>
+<li>视图层（V, View）：负责显示与接受用户输入，即与用户进行交互</li>
+<li>业务处理器层(M, Model)：处理业务逻辑，包括计算业务结果，与数据源交互等,并将处理结果通过渲染器等中介直接渲染至视图告知用户处理结果以及等待用户下一步交互</li>
+<li>控制器层(C, Controller)：负责调度，使视图层的输入根据意图达到相应的业务处理器</li>
+</ul>
+<p>可以看得出来，其实真正在处理交互的是MV，但由于划分层，会同时存在若干个V和若干个M，所以就需要一个C来调度，更有一些复杂的逻辑，可能一个V需要调用多个M来处理，这时候C就作用巨大了。</p>
+<p><img src="" alt="MVC数据传递路径"></p>
+<blockquote>
+<p>像前面提到的，很多成熟的Web服务器框架都是使用MVC架构的，所以要深入研究MVC架构，建议可以考虑学习一些Web服务器，其中，CakePHP是业界比较认可的严格遵循MVC架构的框架。</p>
+</blockquote>
+<h2 id="Android应用原配MVC架构？"><a href="#Android应用原配MVC架构？" class="headerlink" title="Android应用原配MVC架构？"></a>Android应用原配MVC架构？</h2><p>很多人，或者网上很多文章都认为Android应用原生标配的是MVC架构，对于这种说法我是有所保留的，这种说法的基本观点划分如下</p>
+<ul>
+<li>M是业务处理层</li>
+<li>V是各种XML定义的View</li>
+<li>C由Activity来担当</li>
+</ul>
+<p>结合上文对MVC的介绍我们来分析一下我为什么还会保留点什么：</p>
+<ol>
+<li>业务处理层是主动划分出去的，这个不是Android开发要求的，淡然，这个不是重点。</li>
+<li>视图中的V是负责交互，然而XML文件显然不具备这一功效，可以明确感知的事XML文件不是视图层，最多算得上视图层的一个组件，或者称为视图模版。</li>
+<li>负责交互不正是Activity该干的事吗？对，所以要划分，Activity理应是V而非C。</li>
+<li><p>缺少渲染器一般的角色来把M的计算结果返回给V。</p>
+<p> 这样看来，原配MVC很可能不是真的。</p>
+</li>
+</ol>
+<p>在我看来，Android系统开发者原本对应用的设计就是容器化的设计，无论是Activity还是其他组件，其实都是一种容器，在这个容器内你可以运行你想要的任何代码，所以开发这些代码用到什么样的技术，Android系统开发者根本就不关注，同时还为你能快速写好应用提供了不少帮助东西，其中就包括一套XML描述的视图模版技术，这些帮助的东西仅仅是帮助你快速开发，就算你不用，也是完全可以的。</p>
+<p>所以，要使用MVC模式开发应用不是不可以，需要我们重新去考量，去设计，而目前主流的架构主要集中在MVP和MVVM，所以这里我就不再多扯了，，</p>
+<h2 id="MVC-Android"><a href="#MVC-Android" class="headerlink" title="MVC@Android"></a>MVC@Android</h2><p><img src="" alt="MVC@Android架构图"></p>
+<blockquote>
+<p>注意：下文所提到的MVC架构将使用此方案，而非其他文章所描述的原配方案</p>
+</blockquote>
+<h1 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h1><hr>
+<p>就当前，MVC <del>由于被误解了</del> 无人问津，而MVVM目前主流的实现依赖的一种在Android应用开发中仍未被广泛采纳的DataBinding而迟迟不得志，MVP可以说是风光一时无两，无愧为 <strong>最有价值玩家</strong> 。</p>
+<h2 id="从一则故事说起"><a href="#从一则故事说起" class="headerlink" title="从一则故事说起"></a>从一则故事说起</h2><p>Android应用开发有一个通病，由于无原配应用架构，所有的代码仿佛都能写在一个Activity里面便能使其跑出想要的效果，而且开发人员水平参差不齐，啥代码都往里搬，所以Activity往往都会成为一个代码黑洞。</p>
+<p>于是大伙围着分析了一下原因，厄，，总不能说是因为我们开发水平太次了，，对，必须想另外一个理由，，</p>
+<p>于是，一个高大上而且合理的理由就出现了：</p>
+<blockquote>
+<p>“Activity同时控制着视图而且又处理业务，代码多是肯定的呀，维护性差是必然的”</p>
+</blockquote>
+<p><del>我看了看Android系统View类中几万行的代码，心中感慨呀，不多说了</del></p>
+<p>把具体业务处理逻辑M层拆出去，相当简单，拆完以后，发现Activity还是那么庞大，因为Activity还是要处理视图逻辑和业务调度逻辑，那就继续拆。</p>
+<p>于是，把Activity的代码按照视图控制代码和业务控制代码强行拆分成两个类，一个称为V，属于是视图层，另外一个是P，即主持层，主管业务控制。</p>
+<p>这样Activity就真的好轻啦，仅仅包含读取视图数据，弹窗提示用户等代码，再怎么写也好像没有几百行行代码。</p>
+<blockquote>
+<p>“你们这个设计不错，代码很好，维护性很强”</p>
+</blockquote>
+<p>而拥有几千减去几百行代码的P在一般略显疲倦。。。</p>
+<p>不管怎么样，分三个类来写的确比写在一个类里面，可维护性要高很多，而且，还可以把P拆成多个子P，维护性又进一步提高了，有了分层分模块的概念，就可以制定开发规范，通过规范，就算水平差点的开发也不能轻易祸害全局。</p>
+<p>于是呼，这个架构就迅速流行起来了。。。</p>
+<p>故事归故事，MVP还是Android上很成熟的架构，特别是使用合理的时候。</p>
+<h2 id="MVP介绍"><a href="#MVP介绍" class="headerlink" title="MVP介绍"></a>MVP介绍</h2><p>在MVP中，Activity以及相关的View、Fragment等都属于V，负责显示交互结果还有接受数据，所有的逻辑处理，包括控制视图的显示、清空输入框等，都交由P处理，P使用对应的M进行业务逻辑计算，监听操作结果，并回调操作V。</p>
+<p><img src="" alt="MVP@Android交互图"></p>
+<p>MVP主要组成：</p>
+<ul>
+<li>业务处理器层(M, Model)：处理业务逻辑</li>
+<li>视图层(V, View)：被动式处理交互</li>
+<li>主持层(P, Presenter)：控制视图逻辑以及调用业务逻辑</li>
+<li>接口化组件</li>
+</ul>
+<p>这其中，接口化组件并非必要组件，但一般都会着重使用，以降低P与V，P与M之间的耦合度，使之能独立进行各种单元测试，这也是MVP架构津津乐道的友好测试的原因。</p>
+<blockquote>
+<p>说句题外话，无论什么架构，或者说什么模块，都应该尽量考虑面向接口设计，只要面向接口设计了，都属于测试友好型设计。</p>
+</blockquote>
+<h2 id="MVP-VS-MVC"><a href="#MVP-VS-MVC" class="headerlink" title="MVP VS MVC"></a>MVP VS MVC</h2><p>其实我觉得MVP并非是MVC的一个变种，二者有相似之处，但理念还是相差甚远，二者最大的相同点就是M层处理具体业务逻辑。（补充一句：这一层的划分几乎所有架构方案都持有相同的想法）另外一点相同点就是二者的V主要为Activity以及Fragment等。</p>
+<p>下面重点说说区别：</p>
+<ol>
+<li>V，MVC中，拥有完整的与用户互动的权限，可以进行各种非业务相关的操作，而在MVP中，不拥有互动权限，仅仅接受用户输入，然后传递给P进行决策，并接受P的回调进行反馈。</li>
+<li>C&amp;P，MVC中，C是调度器的作用，调度完毕不在关注后续的操作，而在MVP中，P其实是将Activity与M的交互分离封装出来，所以关注M的操作结果并回调V进行下一步操作。</li>
+<li>MVC中会有渲染器等中间件来连接M至V这一步，而MVP无需要这个中间件。</li>
+<li>根据上述几点可以感受到二者的数据流向是不一样的，MVC中，数据是单向流动的，即 <strong>V-&gt;C-&gt;M-(渲染器)-&gt;V</strong> , 而在MVP中，数据都是双向流动的，即 <strong>V&lt;-&gt;P&lt;-&gt;M</strong></li>
+</ol>
+<p>区别之所以这么多是因为二者设计的理念，关注点不一样，如果摆在同一个维度去考虑，那么MVP中的VP加起来大概就等于MVC中的V，所以MVP缺少控制器去调度，而是M与VP直接交流。</p>
+<blockquote>
+<p>从这个角度考虑，我们可以认为MVP是一个精简版的MVC架构，省略了其中的调度以及渲染过程，从而更轻巧灵活更适合移动开发，这也许是MVP流行的一大原因。</p>
+</blockquote>
+<h2 id="MVP的问题"><a href="#MVP的问题" class="headerlink" title="MVP的问题"></a>MVP的问题</h2><ol>
+<li>原本一个Activity顶多加一个M解决的问题，现在要划分成三个类还有三个以上的接口，开发成本显著增加，反而降低了开发效率，随着项目的成长，需要管理维护数倍的代码文件，成本也在急速增加。 </li>
+<li>P承担了Activity大部分的代码，如果不合理规划P，P将会是另一个代码黑洞。</li>
+<li>P主管了Activity的一些逻辑交互，迫使其也受Activity的生命周期所约束，大大增加了其开发难度。</li>
+</ol>
+<h2 id="MVP更多…"><a href="#MVP更多…" class="headerlink" title="MVP更多…"></a>MVP更多…</h2><p>有缺陷，但大多数也有改进的方案，而且Google官方也推出了采用MVP架构的案例，可以称得上是官方非正式认证过，此外，基于MVP架构也有不少成熟的新方案，还有各种辅助开发的开源工具，所以，MVP还是值得考虑使用的。</p>
+<h1 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h1><hr>
+<h2 id="MVVM我是这样去理解的"><a href="#MVVM我是这样去理解的" class="headerlink" title="MVVM我是这样去理解的"></a>MVVM我是这样去理解的</h2><p>说实话，关于MVVM我看了不少文章，然而在很长一段时间内我始终感觉未领悟其奥义，大多数文章都在介绍DataBinding技术，在MVVM如何运用等。</p>
+<p>拨开实现技术，思考一下MVVM架构的核心思想： <strong>数据</strong></p>
+<blockquote>
+<p>数据才是一切的根本</p>
+</blockquote>
+<p>围绕着数据本身从新设计交互逻辑，我们就能轻松理顺这一模式：</p>
+<ol>
+<li>当关注的数据改变了，界面自动相应变化并告知用户</li>
+<li>当需要处理的数据改变了，某个东西自动处理并修正处理后的数据</li>
+<li>数据的计算处理，由相应的业务处理器去处理</li>
+</ol>
+<p>根据这样的交互逻辑，我们划分出一下几个层次：</p>
+<ul>
+<li>V（View）：视图层，感知数据变化，并自动调整界面告知用户，并负责接收用户输入修正数据</li>
+<li>M（Model）：业务逻辑处理层，处理业务</li>
+<li>VM（ViewModel）：相应数据改变，调度业务逻辑层处理数据</li>
+</ul>
+<p>说了这么多，好像也没提到DataBinding呀？对，在MVVM这种架构的思想中，其实DataBinding不是一个狠角色，但实现这种思想，却要依赖到DataBinding。</p>
+<blockquote>
+<p>再说说DataBinding</p>
+<p>何为DataBinding？翻译过来就是“数据绑定”，其实就是一种绑定数据的技术，当数据发生变化，绑定该数据的各种观察者就会获得通知，并“自动”发生变化，无需人工写代码再去操作。其实究其根本，就是这项技术底层用观测者模式，还有些自动化编写代码的技术帮我们封装了那些本该我们手动书写的代码而已矣。</p>
+</blockquote>
+<p>正是有了这种技术，所以MVVM中，V和VM可以忽略对方的存在，只要专心的和数据好好玩耍即可，反正，对方也会感知数据的改变而改变。</p>
+<h2 id="MVVM的优与劣"><a href="#MVVM的优与劣" class="headerlink" title="MVVM的优与劣"></a>MVVM的优与劣</h2><blockquote>
+<p>数据是最好的协议</p>
+</blockquote>
+<p>MVVM通过数据本身解耦V和VM，的确比MVC和MVP架构通过接口来解耦要更高明不止一点。</p>
+<p>另外，各层的交互降到最低，几乎为0，可以专注在自身与数据的交互，而这种交互无非就是感知数据、处理数据、修正数据，各层的逻辑也会相应的清晰明了，维护性自然而然就会增强，同时也适合多人开发，实行真正的V和VM并行开发，还有一些优点我就不多说了。。。</p>
+<p>而Google也发布了官方支持的DataBinding技术来支持这种架构的实现，也算的是官方认证的一种架构了。</p>
+<p>然而缺点还是有的，首先，这种架构的思想理解起来要比其他的难一点，入门门槛也会高一点，其次，这种架构不太适合小项目开发，前期会使问题复杂化。还有，使用官方的DataBinding技术改变了layout文件的传统，侵入性较强，也使不少人犹豫了要不要使用该架构。</p>
+<blockquote>
+<p>言而总之，MVVM是一种高度面向协议的架构，注定了可维护性强，十分推荐在大型项目中使用开发。</p>
+</blockquote>
+<h1 id="RxMV"><a href="#RxMV" class="headerlink" title="RxMV"></a>RxMV</h1><hr>
+<blockquote>
+<p>天下武功<br>唯快不破<br><del>这其实是一个硬广告</del> </p>
+</blockquote>
+<p>无论是MVC、MVP还是MVVM，都是很成熟，业界很是认可的模式，但其实都是大型项目实践的经验，用于更注重速度的小项目无疑是有用牛刀之嫌，为此，根据我的经验以及心得，总结设计了一个适合敏捷开发的响应式架构。</p>
+<hr>
+<p>未完，待续…</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/在Android开发的路上越走越偏/" rel="tag"># 在Android开发的路上越走越偏</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/26/Android-Graph/" rel="next" title="Android Graph">
+                <i class="fa fa-chevron-left"></i> Android Graph
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/08/Android-UI-Self-Adapting/" rel="prev" title="Android UI自适应方案研究">
+                Android UI自适应方案研究 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">林帅斌</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MVC"><span class="nav-number">2.</span> <span class="nav-text">MVC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC是啥？"><span class="nav-number">2.1.</span> <span class="nav-text">MVC是啥？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android应用原配MVC架构？"><span class="nav-number">2.2.</span> <span class="nav-text">Android应用原配MVC架构？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC-Android"><span class="nav-number">2.3.</span> <span class="nav-text">MVC@Android</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MVP"><span class="nav-number">3.</span> <span class="nav-text">MVP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从一则故事说起"><span class="nav-number">3.1.</span> <span class="nav-text">从一则故事说起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVP介绍"><span class="nav-number">3.2.</span> <span class="nav-text">MVP介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVP-VS-MVC"><span class="nav-number">3.3.</span> <span class="nav-text">MVP VS MVC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVP的问题"><span class="nav-number">3.4.</span> <span class="nav-text">MVP的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVP更多…"><span class="nav-number">3.5.</span> <span class="nav-text">MVP更多…</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MVVM"><span class="nav-number">4.</span> <span class="nav-text">MVVM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MVVM我是这样去理解的"><span class="nav-number">4.1.</span> <span class="nav-text">MVVM我是这样去理解的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVVM的优与劣"><span class="nav-number">4.2.</span> <span class="nav-text">MVVM的优与劣</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RxMV"><span class="nav-number">5.</span> <span class="nav-text">RxMV</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">林帅斌</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
